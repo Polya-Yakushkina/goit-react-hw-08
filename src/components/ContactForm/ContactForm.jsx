@@ -14,7 +14,7 @@ const ContactSchema = Yup.object().shape({
         .max(50, "Too long!")
         .required("This field is required"),
     number: Yup.string()
-        .matches(/^\d{3}-\d{3}-\d{4}$/, "The number must be in format XXX-XXX-XXXX")
+        .matches(/^\d{3}-\d{2}-\d{2}$/, "The number must be in format XXX-XX-XX")
         .required("This field is required"),
 });
 
@@ -51,8 +51,8 @@ export default function ContactForm() {
             {({ field }) => (
               <MaskedInput
                 {...field}
-                mask={[/\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, '-', /\d/, /\d/, /\d/, /\d/]}
-                placeholder="XXX-XXX-XXXX"
+                mask={[/\d/, /\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/]}
+                placeholder="XXX-XX-XX"
                 className={clsx(css.input)}
                 id="number"
               />

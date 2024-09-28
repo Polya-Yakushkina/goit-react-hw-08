@@ -15,13 +15,13 @@ export default function SearchBox() {
 
   return (
     <div className={clsx(css.container)}>
-      <p className={clsx(css.text)}>Find contacts by name or number</p> {/* Підказка для користувачів */}
+      <p className={clsx(css.text)}>Find contacts by name or number</p>
       <input
         className={clsx(css.input)}
         type="text"
-        value={filter} // Встановлюємо значення поля вводу на основі Redux
-        onChange={handleChange} // Обробник зміни значення поля вводу
-        placeholder="Search by name or number" // Додано підказку для кращого розуміння
+        value={filter}
+        onChange={handleChange}
+        placeholder="Search by name or number"
       />
     </div>
   );
