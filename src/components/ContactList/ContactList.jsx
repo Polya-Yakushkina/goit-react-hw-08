@@ -11,11 +11,15 @@ export default function ContactList() {
 
   return (
     <ul className={clsx(css.list)}>
-      {visibleContacts.map((contact) => (
-        <li key={contact.id} className={clsx(css.item)}>
-          <Contact data={contact} />
-        </li>
-      ))}
+      {visibleContacts.length === 0 ? (
+        <li className={clsx(css.item)}>No contacts found.</li>
+      ) : (
+        visibleContacts.map((contact) => (
+          <li key={contact.id} className={clsx(css.item)}>
+            <Contact data={contact} />
+          </li>
+        ))
+      )}
     </ul>
   );
 }
