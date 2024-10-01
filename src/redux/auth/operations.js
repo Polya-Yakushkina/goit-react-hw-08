@@ -49,8 +49,8 @@ export const refreshUser = createAsyncThunk(
     setAuthHeader(savedToken);
     
     try {
-      const response = await axios.get("/users/current");
-      return response.data;
+      const { data } = await axios.get("/users/current");
+      return data;
     } catch (error) {
       return thunkAPI.rejectWithValue(error.message);
     }
@@ -62,17 +62,3 @@ export const refreshUser = createAsyncThunk(
     },
   }
 );
-
-
-// export const refreshUser = createAsyncThunk("auth/refresh", async (_, thunkAPI) => {
-//   const storedToken = thunkAPI.getState().auth.token;
-//   if (!storedToken) return thunkAPI.rejectWithValue("An unexpected error occurred.");
-//   setAuthHeader(storedToken);
-
-//   try {
-//     const { data } = await axios.get("/users/current");
-//     return data;
-//   } catch (error) {
-//     return thunkAPI.rejectWithValue(error.message);
-//   }
-// });

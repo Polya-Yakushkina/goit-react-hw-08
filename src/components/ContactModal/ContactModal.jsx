@@ -27,11 +27,23 @@ export default function Modal({ isOpen, onClose, contact }) {
         number: contact.number,
     };
 
-    const handleSubmit = ({ name, number }) => {
-        const { id } = contact;
-        dispatch(updateContact({ id, name, number }));
-        onClose();
-    };
+    const handleSubmit = (values) => {
+    dispatch(updateContact({
+      contactId: contact.id,
+      updates: {
+        name: values.name,
+        number: values.number
+      }
+    }));
+    onClose();
+  };
+
+
+    // const handleSubmit = ({ name, number }) => {
+    //     const { id } = contact;
+    //     dispatch(updateContact({ id, name, number }));
+    //     onClose();
+    // };
     
     if (!isOpen) return null;
     

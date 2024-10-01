@@ -1,9 +1,5 @@
-/* eslint-disable no-unused-vars */
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
-
-// axios.defaults.baseURL = "https://connections-api.goit.global/";
-// axios.defaults.baseURL = "https://66f203a2415379191552d003.mockapi.io/";
 
 export const fetchContacts = createAsyncThunk(
     "contacts/getAll", async (_, thunkAPI) => {
@@ -39,13 +35,26 @@ export const deleteContact = createAsyncThunk(
 );
 
 export const updateContact = createAsyncThunk(
-    "contacts/updateContact",
-    async ({ contactId, name, number }, thunkAPI) => {
-        try {
-            const { data } = await axios.patch(`/contacts/${contactId}`, { name, number });
-            return data;
-        } catch (error) {
-            return thunkAPI.rejectWithValue(error.message);
-        }
+  "contacts/updateContact", 
+  async ({ contactId, updates }, thunkAPI) => {
+    try {
+      const { data } = await axios.patch(`/contacts/${contactId}`, updates);
+      return data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.message);
     }
+  }
 );
+
+
+// export const updateContact = createAsyncThunk(
+//     "contacts/updateContact",
+//     async ({ contactId, name, number }, thunkAPI) => {
+//         try {
+//             const { data } = await axios.patch(`/contacts/${contactId}`, { name, number });
+//             return data;
+//         } catch (error) {
+//             return thunkAPI.rejectWithValue(error.message);
+//         }
+//     }
+// );
