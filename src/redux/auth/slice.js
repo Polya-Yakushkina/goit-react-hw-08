@@ -7,7 +7,7 @@ const initialState = {
         email: null,
     },
     token: null,
-    isLoggedIn: null,
+    isLoggedIn: false,
     isLoading: false,
     isRefreshing: false,
     isError: false,
@@ -38,6 +38,10 @@ const slice = createSlice({
                 state.user = payload;
                 state.isRefreshing = false;
                 state.isLoggedIn = true;
+            })
+            .addCase(refreshUser.rejected, (state, { payload }) => {
+                state.isRefreshing = false;
+                state.isError = payload;
             })
             .addMatcher(isAnyOf(register.pending, logIn.pending), (state) => {
                 state.isLoading = true;
