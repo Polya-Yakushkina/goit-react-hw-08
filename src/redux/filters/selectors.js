@@ -6,13 +6,23 @@ export const selectFilter = state => state.filters.query;
 export const selectFilteredContacts = createSelector(
   [selectContacts, selectFilter],
   (contacts, query) => {
-    const cleanQuery = query.replace(/\D/g, "");
-
-    return contacts.filter(
-      (contact) =>
-        contact.name.toLowerCase().includes(query.toLowerCase()) ||
-        contact.number.replace(/-/g, "").includes(cleanQuery)
-    );
+    return contacts.filter(contact => {
+      const matchesName = contact.name.toLowerCase().includes(query.toLowerCase());
+      const matchesNumber = contact.number.replace(/-/g, "").includes(query);
+      return matchesName || matchesNumber;
+    });
   }
 );
+
+// export const selectFilteredContacts = createSelector(
+//   [selectContacts, selectFilter],
+//   (contacts, query) => {
+//     return contacts.filter(
+//       (contact) =>
+//         contact.name.toLowerCase().includes(query.toLowerCase()) ||
+//         contact.number.includes(query)
+//     );
+//   }
+// );
+
 
