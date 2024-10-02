@@ -11,6 +11,9 @@ const initialState = {
     isLoading: false,
     isRefreshing: false,
     isError: false,
+    errorMessage: "", // Додано
+    emailError: false, // Додано
+    passwordError: false, // Додано
 };
 
 const slice = createSlice({
@@ -41,15 +44,29 @@ const slice = createSlice({
             })
             .addCase(refreshUser.rejected, (state, { payload }) => {
                 state.isRefreshing = false;
-                state.isError = payload;
+                // state.isError = payload;
+                state.isError = true; // Замінено
+                state.errorMessage = payload; // Додано
             })
             .addMatcher(isAnyOf(register.pending, logIn.pending), (state) => {
                 state.isLoading = true;
             })
             .addMatcher(isAnyOf(register.rejected, logIn.rejected), (state, { payload }) => {
                 state.isLoading = false;
-                state.isError = payload;
-        })
+                // state.isError = payload;
+                state.isError = true; // Замінено
+                state.errorMessage = payload; // Додано
+                if (payload.includes("email")) { // Додано
+                    state.emailError = true; // Додано
+                }
+                if (payload.includes("password")) { // Додано
+                    state.passwordError = true; // Додано
+                }
+            })
+            .addMatcher(isAnyOf(register.fulfilled, logIn.fulfilled), (state) => {
+                state.emailError = false;
+                state.passwordError = false;
+            });
     }
 });
 
