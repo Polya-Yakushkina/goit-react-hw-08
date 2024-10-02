@@ -1,7 +1,8 @@
 import ContactModal from "../ContactModal/ContactModal";
 import { deleteContact } from "../../redux/contacts/operations";
-import { useDispatch } from "react-redux";
-import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { selectModalOpen } from "../../redux/modal/selectors";
+import { openModal, closeModal } from "../../redux/modal/slice";
 import { IoPerson } from "react-icons/io5";
 import { FaPhoneAlt } from "react-icons/fa";
 import { FaUserEdit } from "react-icons/fa";
@@ -12,18 +13,18 @@ import clsx from "clsx";
 
 export default function Contact({ data: { id, name, number } }) {
   const dispatch = useDispatch();
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const isModalOpen = useSelector(selectModalOpen);
 
   const handleDelete = () => {
     dispatch(deleteContact(id));
   };
 
   const handleOpenModal = () => {
-    setIsModalOpen(true);
+    dispatch(openModal({ id, name, number }));
   };
 
   const handleCloseModal = () => {
-    setIsModalOpen(false);
+    dispatch(closeModal());
   };
 
   return (
@@ -48,9 +49,9 @@ export default function Contact({ data: { id, name, number } }) {
       </div>
      {isModalOpen && (
         <ContactModal 
-          isOpen={isModalOpen} 
+          // isOpen={isModalOpen}
           onClose={handleCloseModal} 
-          contact={{ id, name, number }}
+          // contact={{ id, name, number }}
         />
       )}
     </div>

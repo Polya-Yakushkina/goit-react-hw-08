@@ -1,5 +1,7 @@
-import { useDispatch } from "react-redux";
-import { updateContact } from '../../redux/contacts/operations';
+import { useDispatch, useSelector } from "react-redux";
+import { updateContact } from "../../redux/contacts/operations";
+import { closeModal } from "../../redux/modal/slice";
+import { selectModalContact } from "../../redux/modal/selectors";
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from "yup";
 import MaskedInput from "react-text-mask";
@@ -19,8 +21,9 @@ const ContactSchema = Yup.object().shape({
         .required("This field is required"),
 });
 
-export default function Modal({ isOpen, onClose, contact }) {
+export default function Modal() {
     const dispatch = useDispatch();
+    const contact = useSelector(selectModalContact);
 
     const initialValues = {
         name: contact.name,
@@ -35,23 +38,18 @@ export default function Modal({ isOpen, onClose, contact }) {
         number: values.number
       }
     }));
-    onClose();
-  };
-
-
-    // const handleSubmit = ({ name, number }) => {
-    //     const { id } = contact;
-    //     dispatch(updateContact({ id, name, number }));
-    //     onClose();
-    // };
+    dispatch(closeModal());
+    };
     
-    if (!isOpen) return null;
+    const handleClose = () => {
+        dispatch(closeModal());
+    };
     
     return (
         <div className={css.modalOverlay}>
             <div className={css.modalContent}>
                 <button
-                    onClick={onClose}
+                    onClick={handleClose}
                     className={clsx(css.closeBtn)}>
                     <RiCloseFill />
                 </button>
