@@ -1,4 +1,3 @@
-import { Toaster } from "react-hot-toast";
 import AppBar from "../AppBar/AppBar";
 
 
@@ -10,8 +9,6 @@ export default function Layout({ children }) {
         <div className={clsx(css.container)}>
             <AppBar />
             {children}
-            <Toaster position="top-right" reverseOrder={false} />
         </div>
     )
 }
-

@@ -1,8 +1,10 @@
 import { Formik, Form, Field, ErrorMessage } from 'formik';
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addContact } from "../../redux/contacts/operations";
+import { selectContacts } from "../../redux/contacts/selectors";
 import * as Yup from "yup";
 import MaskedInput from "react-text-mask";
+import toast from "react-hot-toast";
 
 import clsx from "clsx";
 import css from "./ContactForm.module.css";
@@ -25,12 +27,26 @@ const initialValues = {
 
 export default function ContactForm() {
   const dispatch = useDispatch();
+  const contacts = useSelector(selectContacts);
 
   const handleSubmit = (values, actions) => {
+    const existingContact = contacts.find(contact =>
+      contact.name === values.name || contact.number === values.number);
+    
+    if (existingContact) {
+      const message = existingContact.name === values.name
+        ? `Contact ${values.name} already exists in your phonebook!`
+        : `Number ${values.number} already belongs to contact ${existingContact.name}!`;
+      toast.error(message);
+      actions.setSubmitting(false);
+      return;
+    }
+
     dispatch(addContact({
         name: values.name,
         number: values.number
     }));
+    toast.success(`Contact ${values.name} has been added to your phonebook!`);
     actions.resetForm();
   };
 

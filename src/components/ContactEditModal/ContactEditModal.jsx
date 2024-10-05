@@ -1,14 +1,14 @@
 import { useDispatch, useSelector } from "react-redux";
 import { updateContact } from "../../redux/contacts/operations";
-import { closeModal } from "../../redux/modal/slice";
-import { selectModalContact } from "../../redux/modal/selectors";
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from "yup";
 import MaskedInput from "react-text-mask";
 import { RiCloseFill } from "react-icons/ri";
+import toast from "react-hot-toast";
 
 import clsx from "clsx";
-import css from "./ContactModal.module.css";
+import css from "./ContactEditModal.module.css";
+import { selectContacts } from "../../redux/contacts/selectors";
 
 const ContactSchema = Yup.object().shape({
     name: Yup.string()
@@ -21,35 +21,55 @@ const ContactSchema = Yup.object().shape({
         .required("This field is required"),
 });
 
-export default function Modal() {
+export default function ContactEditModal({ contact, onClose }) {
     const dispatch = useDispatch();
-    const contact = useSelector(selectModalContact);
+    const contacts = useSelector(selectContacts);
 
     const initialValues = {
         name: contact.name,
         number: contact.number,
     };
-
-    const handleSubmit = (values) => {
-    dispatch(updateContact({
-      contactId: contact.id,
-      updates: {
-        name: values.name,
-        number: values.number
-      }
-    }));
-    dispatch(closeModal());
-    };
     
-    const handleClose = () => {
-        dispatch(closeModal());
-    };
+    const handleSubmit = (values) => {
+        const existingContact = contacts.find(contact =>
+            contact.name === values.name || contact.number === values.number);
+    
+        if (existingContact) {
+            const message = existingContact.name === values.name
+                ? `Contact ${values.name} already exists in your phonebook!`
+                : `Number ${values.number} already belongs to contact ${existingContact.name}!`;
+            toast.error(message);
+            actions.setSubmitting(false);
+            return;
+        }
+        
+        dispatch(updateContact({
+            contactId: contact.id,
+            updates: {
+                name: values.name,
+                number: values.number
+            }
+        }));
+        const nameChanged = contact.name !== values.name;
+        const numberChanged = contact.number !== values.number;
+        if (nameChanged && numberChanged) {
+            toast.success(`Contact ${contact.name} has been changed to
+            ${values.name} and number to ${values.number}!`);
+        } else if (nameChanged) {
+            toast.success(`Contact ${contact.name} has been changed to
+            ${values.name}!`);
+        } else if (numberChanged) {
+            toast.success(`${values.name}'s number has been updated!`);
+        }
+    onClose();
+};
+
     
     return (
         <div className={css.modalOverlay}>
             <div className={css.modalContent}>
                 <button
-                    onClick={handleClose}
+                    onClick={onClose}
                     className={clsx(css.closeBtn)}>
                     <RiCloseFill />
                 </button>

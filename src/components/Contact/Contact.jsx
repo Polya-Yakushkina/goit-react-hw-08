@@ -1,30 +1,44 @@
-import ContactModal from "../ContactModal/ContactModal";
+import ContactEditModal from "../ContactEditModal/ContactEditModal";
+import ContactDelModal from "../ContactDelModal/ContactDelModal";
 import { deleteContact } from "../../redux/contacts/operations";
-import { useDispatch, useSelector } from "react-redux";
-import { selectModalOpen } from "../../redux/modal/selectors";
-import { openModal, closeModal } from "../../redux/modal/slice";
+import { useDispatch } from "react-redux";
+import { useState } from "react";
 import { IoPerson } from "react-icons/io5";
 import { FaPhoneAlt } from "react-icons/fa";
 import { FaUserEdit } from "react-icons/fa";
 import { RiDeleteBin6Line } from 'react-icons/ri';
+import toast from "react-hot-toast";
 
 import css from "./Contact.module.css";
 import clsx from "clsx";
 
 export default function Contact({ data: { id, name, number } }) {
   const dispatch = useDispatch();
-  const isModalOpen = useSelector(selectModalOpen);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [delModalOpen, setDelModalOpen] = useState(false);
+  const [selectedContact, setSelectedContact] = useState(null);
 
   const handleDelete = () => {
+    setDelModalOpen(true);
+  }
+
+  const handleConfirmDelete = () => {
     dispatch(deleteContact(id));
+    toast.success(`Contact "${name}" has been deleted!`);
+    setDelModalOpen(false);
   };
 
-  const handleOpenModal = () => {
-    dispatch(openModal({ id, name, number }));
+  const handleCancelDelete = () => {
+    setDelModalOpen(false);
   };
 
-  const handleCloseModal = () => {
-    dispatch(closeModal());
+  const handleEditModal = () => {
+    setSelectedContact({ id, name, number });
+    setEditModalOpen(true);
+  };
+
+  const handleCloseEditModal = () => {
+    setEditModalOpen(false);
   };
 
   return (
@@ -41,17 +55,25 @@ export default function Contact({ data: { id, name, number } }) {
         <RiDeleteBin6Line
           className={clsx(css.deleteIcon)}
           onClick={handleDelete}
+          role="button"
         />
         <FaUserEdit
           className={clsx(css.editIcon)}
-          onClick={handleOpenModal}
+          onClick={handleEditModal}
+          role="button"
         />
       </div>
-     {isModalOpen && (
-        <ContactModal 
-          // isOpen={isModalOpen}
-          onClose={handleCloseModal} 
-          // contact={{ id, name, number }}
+     {editModalOpen && (
+        <ContactEditModal 
+          onClose={handleCloseEditModal} 
+          contact={selectedContact}
+        />
+      )}
+      {delModalOpen && (
+        <ContactDelModal 
+          contact={{ id, name, number }} 
+          onConfirm={handleConfirmDelete}
+          onCancel={handleCancelDelete}
         />
       )}
     </div>

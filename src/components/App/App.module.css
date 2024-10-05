@@ -1,0 +1,9 @@
+.toast {
+    font-size: 22px !important;
+    color: #333;
+    border: 2px solid lightgray;
+    box-shadow: royalblue;
+    padding: 20px;
+    border-radius: 8px;
+    animation-duration: 8000;
+}

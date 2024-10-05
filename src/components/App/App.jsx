@@ -8,6 +8,7 @@ import PrivateRoute from "../PrivateRoute";
 import RestrictedRoute from "../RestrictedRoute";
 import { Toaster } from "react-hot-toast";
 
+import css from "./App.module.css";
 
 const HomePage  = lazy(() => import("../../pages/HomePage/HomePage"));
 const RegisterPage = lazy(() => import("../../pages/RegisterPage/RegisterPage"));
@@ -55,7 +56,11 @@ export default function App() {
               />} />
           </Routes>
         </Suspense>
-      <Toaster />
+        <Toaster
+          toastOptions={{
+            className: css.toast,
+          }}
+        />
     </Layout>
   )
 }

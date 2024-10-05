@@ -13,16 +13,3 @@ export const selectFilteredContacts = createSelector(
     });
   }
 );
-
-// export const selectFilteredContacts = createSelector(
-//   [selectContacts, selectFilter],
-//   (contacts, query) => {
-//     return contacts.filter(
-//       (contact) =>
-//         contact.name.toLowerCase().includes(query.toLowerCase()) ||
-//         contact.number.includes(query)
-//     );
-//   }
-// );
-
-
