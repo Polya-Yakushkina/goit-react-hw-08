@@ -30,39 +30,41 @@ export default function ContactEditModal({ contact, onClose }) {
         number: contact.number,
     };
     
-    const handleSubmit = (values) => {
-        const existingContact = contacts.find(contact =>
-            contact.name === values.name || contact.number === values.number);
-    
-        if (existingContact) {
-            const message = existingContact.name === values.name
-                ? `Contact ${values.name} already exists in your phonebook!`
-                : `Number ${values.number} already belongs to contact ${existingContact.name}!`;
-            toast.error(message);
-            actions.setSubmitting(false);
-            return;
+const handleSubmit = (values, actions) => {
+    const existingContact = contacts.find(existingContact =>
+        (existingContact.name === values.name || existingContact.number === values.number) &&
+        existingContact.id !== contact.id);
+
+    if (existingContact) {
+        const message = existingContact.number === values.number
+            ? `Number ${values.number} already belongs to contact ${existingContact.name}!`
+            : `Contact ${values.name} already exists in your phonebook!`;
+        toast.error(message);
+        actions.setSubmitting(false);
+        return;
+    }
+
+    dispatch(updateContact({
+        contactId: contact.id,
+        updates: {
+            name: values.name,
+            number: values.number
         }
-        
-        dispatch(updateContact({
-            contactId: contact.id,
-            updates: {
-                name: values.name,
-                number: values.number
-            }
-        }));
-        const nameChanged = contact.name !== values.name;
-        const numberChanged = contact.number !== values.number;
-        if (nameChanged && numberChanged) {
-            toast.success(`Contact ${contact.name} has been changed to
-            ${values.name} and number to ${values.number}!`);
-        } else if (nameChanged) {
-            toast.success(`Contact ${contact.name} has been changed to
-            ${values.name}!`);
-        } else if (numberChanged) {
-            toast.success(`${values.name}'s number has been updated!`);
-        }
+    }));
+
+    const nameChanged = contact.name !== values.name;
+    const numberChanged = contact.number !== values.number;
+    if (nameChanged && numberChanged) {
+        toast.success(`Contact ${contact.name} has been changed to ${values.name} and number to ${values.number}!`);
+    } else if (nameChanged) {
+        toast.success(`Contact ${contact.name} has been changed to ${values.name}!`);
+    } else if (numberChanged) {
+        toast.success(`${values.name}'s number has been updated!`);
+    }
+
     onClose();
 };
+
 
     
     return (

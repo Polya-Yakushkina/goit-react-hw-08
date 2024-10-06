@@ -11,7 +11,7 @@ import css from "./ContactForm.module.css";
 
 const ContactSchema = Yup.object().shape({
     name: Yup.string()
-        .matches(/^[A-Za-z\s.'-]+$/, "This field must contain only letters, spaces, dots, hyphens and apostrophes") // Додано '.' для точок
+        .matches(/^[A-Za-z\s.'-]+$/, "This field must contain only letters, spaces, dots, hyphens and apostrophes")
         .min(2, "Too short!")
         .max(50, "Too long!")
         .required("This field is required"),
